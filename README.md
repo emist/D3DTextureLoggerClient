@@ -16,6 +16,8 @@ Keep your source up to date with:
 
 [.NET Framework](http://www.microsoft.com/net/download.aspx)
 
+[SlimdDX](http://slimdx.org/)
+
 [Easyhook](http://easyhook.codeplex.com/)
 
 [Windows Debug Help Library](http://msdn.microsoft.com/en-us/library/windows/desktop/ms679309.aspx)
