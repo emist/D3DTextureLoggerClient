@@ -18,7 +18,7 @@ Keep your source up to date with:
 
 [Easyhook](http://easyhook.codeplex.com/)
 
-[Windows Debug Help Library](http://msdn.microsoft.com/en-us/library/windows/desktop/ms679309(v=vs.85).aspx)
+[Windows Debug Help Library](http://msdn.microsoft.com/en-us/library/windows/desktop/ms679309.aspx)
 
 <h2>Compiling</h2>
 
