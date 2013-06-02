@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D3DTextureLoggerClient", "D3DTextureLoggerClient\D3DTextureLoggerClient.csproj", "{CB542359-E54F-49C3-BC93-830DD5D83586}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VtableLookup", "VtableLookup\VtableLookup\VtableLookup.vcxproj", "{BD05947D-D232-40EC-838B-BAF63B424780}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D3DHookingDLL", "D3DHookingDLL\D3DHookingDLL.csproj", "{F96224B0-4929-45EA-A404-5AAB46177EA1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Debug|Win32.ActiveCfg = Debug|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Debug|x86.ActiveCfg = Debug|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Debug|x86.Build.0 = Debug|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Release|Any CPU.ActiveCfg = Release|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Release|Mixed Platforms.Build.0 = Release|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Release|Win32.ActiveCfg = Release|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Release|x86.ActiveCfg = Release|x86
+		{CB542359-E54F-49C3-BC93-830DD5D83586}.Release|x86.Build.0 = Release|x86
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Debug|Win32.Build.0 = Debug|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Debug|x86.ActiveCfg = Debug|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Release|Any CPU.ActiveCfg = Release|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Release|Win32.ActiveCfg = Release|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Release|Win32.Build.0 = Release|Win32
+		{BD05947D-D232-40EC-838B-BAF63B424780}.Release|x86.ActiveCfg = Release|Win32
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Release|Win32.ActiveCfg = Release|Any CPU
+		{F96224B0-4929-45EA-A404-5AAB46177EA1}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
