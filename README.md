@@ -27,3 +27,5 @@ Keep your source up to date with:
 Load the solution into visual studio and press F6
 
 <h2>Documentation</h2>
+
+[Docs](http://eryanbot.com/jtp/2013/06/02/d3dtextureloggerclient/)
