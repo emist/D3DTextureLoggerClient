@@ -9,7 +9,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 
-
 namespace D3DTextureLoggerClient
 {
     public class D3DLoggerInterface : MarshalByRefObject
@@ -18,6 +17,7 @@ namespace D3DTextureLoggerClient
         public string primCount, vertCount;
         public bool saveprim = false, automatic = false;
         public bool clearprims = false;
+        public bool display = true;
         public int TotalPrims = 0;
         public string OutPutDir;
 
@@ -29,6 +29,11 @@ namespace D3DTextureLoggerClient
         public void ToggleClearPrims()
         {
             clearprims = false;
+        }
+
+        public void ToggleDisplayPrim()
+        {
+            display = true;
         }
 
         public void UpdateTotalPrims(int prims)

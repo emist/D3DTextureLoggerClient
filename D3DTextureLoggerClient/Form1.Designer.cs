@@ -40,6 +40,9 @@
             this.button6 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.totalPrims = new System.Windows.Forms.Label();
+            this.AddToChamsButton = new System.Windows.Forms.Button();
+            this.ToggleDisplay = new System.Windows.Forms.Button();
+            this.ClearChams = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -75,7 +78,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 143);
+            this.label1.Location = new System.Drawing.Point(23, 184);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 13);
             this.label1.TabIndex = 4;
@@ -84,7 +87,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 172);
+            this.label2.Location = new System.Drawing.Point(23, 213);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 13);
             this.label2.TabIndex = 5;
@@ -93,7 +96,7 @@
             // VertCountLabel
             // 
             this.VertCountLabel.AutoSize = true;
-            this.VertCountLabel.Location = new System.Drawing.Point(93, 172);
+            this.VertCountLabel.Location = new System.Drawing.Point(93, 213);
             this.VertCountLabel.Name = "VertCountLabel";
             this.VertCountLabel.Size = new System.Drawing.Size(13, 13);
             this.VertCountLabel.TabIndex = 6;
@@ -102,7 +105,7 @@
             // PrimCountLabel
             // 
             this.PrimCountLabel.AutoSize = true;
-            this.PrimCountLabel.Location = new System.Drawing.Point(93, 143);
+            this.PrimCountLabel.Location = new System.Drawing.Point(93, 184);
             this.PrimCountLabel.Name = "PrimCountLabel";
             this.PrimCountLabel.Size = new System.Drawing.Size(13, 13);
             this.PrimCountLabel.TabIndex = 7;
@@ -141,7 +144,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 198);
+            this.label3.Location = new System.Drawing.Point(23, 239);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(59, 13);
             this.label3.TabIndex = 11;
@@ -150,17 +153,48 @@
             // totalPrims
             // 
             this.totalPrims.AutoSize = true;
-            this.totalPrims.Location = new System.Drawing.Point(93, 198);
+            this.totalPrims.Location = new System.Drawing.Point(93, 239);
             this.totalPrims.Name = "totalPrims";
             this.totalPrims.Size = new System.Drawing.Size(13, 13);
             this.totalPrims.TabIndex = 12;
             this.totalPrims.Text = "0";
             // 
+            // AddToChamsButton
+            // 
+            this.AddToChamsButton.Location = new System.Drawing.Point(26, 124);
+            this.AddToChamsButton.Name = "AddToChamsButton";
+            this.AddToChamsButton.Size = new System.Drawing.Size(99, 23);
+            this.AddToChamsButton.TabIndex = 13;
+            this.AddToChamsButton.Text = "Add to Chams";
+            this.AddToChamsButton.UseVisualStyleBackColor = true;
+            // 
+            // ToggleDisplay
+            // 
+            this.ToggleDisplay.Location = new System.Drawing.Point(73, 153);
+            this.ToggleDisplay.Name = "ToggleDisplay";
+            this.ToggleDisplay.Size = new System.Drawing.Size(96, 24);
+            this.ToggleDisplay.TabIndex = 14;
+            this.ToggleDisplay.Text = "Toggle Display";
+            this.ToggleDisplay.UseVisualStyleBackColor = true;
+            this.ToggleDisplay.Click += new System.EventHandler(this.UndisplayPrimButton_Click);
+            // 
+            // ClearChams
+            // 
+            this.ClearChams.Location = new System.Drawing.Point(132, 124);
+            this.ClearChams.Name = "ClearChams";
+            this.ClearChams.Size = new System.Drawing.Size(96, 23);
+            this.ClearChams.TabIndex = 15;
+            this.ClearChams.Text = "Clear Chams";
+            this.ClearChams.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.ClientSize = new System.Drawing.Size(256, 299);
+            this.Controls.Add(this.ClearChams);
+            this.Controls.Add(this.ToggleDisplay);
+            this.Controls.Add(this.AddToChamsButton);
             this.Controls.Add(this.totalPrims);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button6);
@@ -194,5 +228,8 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label totalPrims;
+        private System.Windows.Forms.Button AddToChamsButton;
+        private System.Windows.Forms.Button ToggleDisplay;
+        private System.Windows.Forms.Button ClearChams;
     }
 }

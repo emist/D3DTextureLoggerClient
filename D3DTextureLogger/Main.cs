@@ -275,29 +275,37 @@ namespace D3DTextureLogger
                 try
                 {
                     Primitive prim = new Primitive(primCount, numVertices);
+                    //if new primitive being rendered, add it to our list
                     if (!prims.Contains(prim))
                     {
                         prims.Add(prim);
                     }
 
-                    if (prims.GetSelectedPrimitive() != null)
-                        if (prims.GetSelectedPrimitive().Equals(prim))   
+                    Primitive selectedPrim = prims.GetSelectedPrimitive();
+                    if (selectedPrim != null)
+                    {
+                        if (selectedPrim.Equals(prim))
                         {
                             if (RedTexture == null)
                                 RedTexture = SlimDX.Direct3D9.Texture.FromMemory(device, red);
-                            
+
                             device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
                             device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
                             device.SetTexture(0, RedTexture);
                             hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
-                                                             numVertices, startIndex, primCount).Code; 
+                                                             numVertices, startIndex, primCount).Code;
                         }
+                        //if not to display, don't render
+                        if (prims[prims.IndexOf(prim)].Displayed == false)
+                            return 0;
+                    }
                 }
                 catch (Exception e)
                 {
                     Interface.ReportException(e);
                     return hRet;
                 }
+
                 if (hRet == 0)
                     hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                             numVertices, startIndex, primCount).Code;
@@ -476,6 +484,17 @@ namespace D3DTextureLogger
                         return device.EndScene().Code;
                     }
                     */
+
+                if (Interface.display == false)
+                {
+                    int selected = prims.IndexOf(prims.GetSelectedPrimitive());
+                    if (prims[selected].Displayed == true)
+                        prims[selected].Displayed = false;
+                    else
+                        prims[selected].Displayed = true;
+
+                    Interface.ToggleDisplayPrim();
+                }
 
                 if (Interface.keys.Count > 0)
                 {

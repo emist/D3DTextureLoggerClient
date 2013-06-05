@@ -72,5 +72,10 @@ namespace D3DTextureLoggerClient
             totalPrims.Text = Convert.ToString(Program._interface.TotalPrims);
         }
 
+        private void UndisplayPrimButton_Click(object sender, EventArgs e)
+        {
+            Program._interface.display = false;
+        }
+
     }
 }
