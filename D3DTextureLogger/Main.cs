@@ -92,8 +92,6 @@ namespace D3DTextureLogger
         const int LOGVALUES = 4;
         int g_uiStride = 0;
 
-
-
         [DllImport("user32.dll")]
         static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
 
@@ -241,22 +239,6 @@ namespace D3DTextureLogger
             }
         }
 
-        private void SendSpotLightAttributes(ref SlimDX.Direct3D9.Light light)
-        {
-            string attrs = "Light settings: Range - " + Convert.ToString(light.Range) + "\n" +
-                                           "Attenuation0 - " + Convert.ToString(light.Attenuation0) + "\n" +
-                                           "Attenuation1 - " + Convert.ToString(light.Attenuation1) + "\n" +
-                                           "Attenuation2 - " + Convert.ToString(light.Attenuation2) + "\n" +
-                                           "Outer Cone - " + Convert.ToString(light.Phi) + "\n" +
-                                           "Inner Cone - " + Convert.ToString(light.Theta) + "\n" +
-                                           "Falloff - " + Convert.ToString(light.Falloff) + "\n";
-            Main This = (Main)HookRuntimeInfo.Callback;
-            lock (This.Queue)
-            {
-                This.Queue.Push(attrs);
-            }
-        }
-
         public void Screenshot(Device device, string filename, int primCount, int numVertices)
         {
             Surface surf;
@@ -289,35 +271,26 @@ namespace D3DTextureLogger
         {
             using (SlimDX.Direct3D9.Device device = SlimDX.Direct3D9.Device.FromPointer(devicePtr))
             {
-                int hRet = 0;//device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
-                //                                 numVertices, startIndex, primCount).Code;
+                int hRet = 0;
                 try
                 {
                     Primitive prim = new Primitive(primCount, numVertices);
                     if (!prims.Contains(prim))
                     {
-                        Main This = (Main)EasyHook.HookRuntimeInfo.Callback;
-                        lock (This.Queue)
-                        {
-                            //This.Queue.Push("Populating PrimQueue");
-                        }
                         prims.Add(prim);
                     }
 
                     if (prims.GetSelectedPrimitive() != null)
-                        if (prims.GetSelectedPrimitive().Equals(prim))    //if (IsKeyPushedDown(Keys.Up))
+                        if (prims.GetSelectedPrimitive().Equals(prim))   
                         {
-                            //if (!System.IO.File.Exists(filename + primCount + "x" + numVertices + ".bmp"))
-                            {
-                                if (RedTexture == null)
-                                    RedTexture = SlimDX.Direct3D9.Texture.FromMemory(device, red);
-
-                                device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
-                                device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
-                                device.SetTexture(0, RedTexture);
-                                hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
-                                                             numVertices, startIndex, primCount).Code;
-                            }
+                            if (RedTexture == null)
+                                RedTexture = SlimDX.Direct3D9.Texture.FromMemory(device, red);
+                            
+                            device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
+                            device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
+                            device.SetTexture(0, RedTexture);
+                            hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
+                                                             numVertices, startIndex, primCount).Code; 
                         }
                 }
                 catch (Exception e)
@@ -338,7 +311,6 @@ namespace D3DTextureLogger
         {
             using (SlimDX.Direct3D9.Device device = SlimDX.Direct3D9.Device.FromPointer(devicePtr))
             {
-                // If you need to capture at a particular frame rate, add logic here decide whether or not to skip the frame
                 try
                 {
                     stride = Stride;
@@ -432,7 +404,6 @@ namespace D3DTextureLogger
             using (Device device = SlimDX.Direct3D9.Device.FromPointer(devicePtr))
             {
                 /*
-                    // If you need to capture at a particular frame rate, add logic here decide whether or not to skip the frame
                     try
                     {
 
