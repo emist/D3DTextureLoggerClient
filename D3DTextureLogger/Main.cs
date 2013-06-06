@@ -282,6 +282,7 @@ namespace D3DTextureLogger
                     }
 
                     Primitive selectedPrim = prims.GetSelectedPrimitive();
+                    
                     if (selectedPrim != null)
                     {
                         if (selectedPrim.Equals(prim))
@@ -295,10 +296,11 @@ namespace D3DTextureLogger
                             hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                              numVertices, startIndex, primCount).Code;
                         }
-                        //if not to display, don't render
+                    }
+                    //if not to display, don't render
+                    if(prims.IndexOf(prim) != -1)
                         if (prims[prims.IndexOf(prim)].Displayed == false)
                             return 0;
-                    }
                 }
                 catch (Exception e)
                 {
@@ -484,59 +486,47 @@ namespace D3DTextureLogger
                         return device.EndScene().Code;
                     }
                     */
-
+                
                 if (Interface.display == false)
                 {
                     int selected = prims.IndexOf(prims.GetSelectedPrimitive());
-                    if (prims[selected].Displayed == true)
-                        prims[selected].Displayed = false;
-                    else
-                        prims[selected].Displayed = true;
+                    if (selected != -1)
+                    {
+                        if (prims[selected].Displayed == true)
+                            prims[selected].Displayed = false;
+                        else
+                            prims[selected].Displayed = true;
 
-                    Interface.ToggleDisplayPrim();
+                        Interface.ToggleDisplayPrim();
+                    }
                 }
 
-                if (Interface.keys.Count > 0)
+                try
                 {
-                    if (prims.Count > 0)
+                    if (Interface.keys.Count > 0)
                     {
-                        string primcount = "", vertcount = "";
-                        int selected = prims.IndexOf(prims.GetSelectedPrimitive());
-                        if (Interface.keys[0].Equals(Keys.Up))
+                        if (prims.Count > 0)
                         {
-                            if (selected != -1)
+                            string primcount = "", vertcount = "";
+                            int selected = prims.IndexOf(prims.GetSelectedPrimitive());
+                            Queue.Push("Selected-EndScene::selected" + selected);
+                            if (Interface.keys[0].Equals(Keys.Up))
                             {
-                                prims[selected].Selected = false;
-                                if (selected != 0)
+                                if (selected != -1)
                                 {
-                                    prims[selected - 1].Selected = true;
-                                    primcount = Convert.ToString(prims[selected - 1].PrimCount);
-                                    vertcount = Convert.ToString(prims[selected - 1].NumVertices);
-                                }
-                                else
-                                {
-                                    primcount = Convert.ToString(prims[prims.Count - 1].PrimCount);
-                                    vertcount = Convert.ToString(prims[prims.Count - 1].NumVertices);
-                                    prims[prims.Count - 1].Selected = true;
-                                }
-                            }
-                            else
-                            {
-                                primcount = Convert.ToString(prims[0].PrimCount);
-                                vertcount = Convert.ToString(prims[0].NumVertices);
-                                prims[0].Selected = true;
-                            }
-                        }
-                        else if (Interface.keys[0].Equals(Keys.Down))
-                        {
-                            if (selected != -1)
-                            {
-                                prims[selected].Selected = false;
-                                if (selected != prims.Count - 1)
-                                {
-                                    primcount = Convert.ToString(prims[selected + 1].PrimCount);
-                                    vertcount = Convert.ToString(prims[selected + 1].NumVertices);
-                                    prims[selected + 1].Selected = true;
+                                    prims[selected].Selected = false;
+                                    if (selected != 0)
+                                    {
+                                        prims[selected - 1].Selected = true;
+                                        primcount = Convert.ToString(prims[selected - 1].PrimCount);
+                                        vertcount = Convert.ToString(prims[selected - 1].NumVertices);
+                                    }
+                                    else
+                                    {
+                                        primcount = Convert.ToString(prims[prims.Count - 1].PrimCount);
+                                        vertcount = Convert.ToString(prims[prims.Count - 1].NumVertices);
+                                        prims[prims.Count - 1].Selected = true;
+                                    }
                                 }
                                 else
                                 {
@@ -545,23 +535,46 @@ namespace D3DTextureLogger
                                     prims[0].Selected = true;
                                 }
                             }
-                            else
+                            else if (Interface.keys[0].Equals(Keys.Down))
                             {
-                                primcount = Convert.ToString(prims[0].PrimCount);
-                                vertcount = Convert.ToString(prims[0].NumVertices);
-                                prims[0].Selected = true;
-                            }
+                                if (selected != -1)
+                                {
+                                    prims[selected].Selected = false;
+                                    if (selected != prims.Count - 1)
+                                    {
+                                        primcount = Convert.ToString(prims[selected + 1].PrimCount);
+                                        vertcount = Convert.ToString(prims[selected + 1].NumVertices);
+                                        prims[selected + 1].Selected = true;
+                                    }
+                                    else
+                                    {
+                                        primcount = Convert.ToString(prims[0].PrimCount);
+                                        vertcount = Convert.ToString(prims[0].NumVertices);
+                                        prims[0].Selected = true;
+                                    }
+                                }
+                                else
+                                {
+                                    primcount = Convert.ToString(prims[0].PrimCount);
+                                    vertcount = Convert.ToString(prims[0].NumVertices);
+                                    prims[0].Selected = true;
+                                }
 
+                            }
+                            Interface.UpdatePrimandVertCount(primcount, vertcount);
+                            Interface.ClearQueue();
                         }
-                        Interface.UpdatePrimandVertCount(primcount, vertcount);
-                        Interface.ClearQueue();
+                    }
+                    if (Interface.saveprim)
+                    {
+                        Primitive prim = prims.GetSelectedPrimitive();
+                        Screenshot(device, Interface.OutPutDir, prim.PrimCount, prim.NumVertices);
+                        Interface.clearsaveprim();
                     }
                 }
-                if (Interface.saveprim)
+                catch (Exception e)
                 {
-                    Primitive prim = prims.GetSelectedPrimitive();
-                    Screenshot(device, Interface.OutPutDir, prim.PrimCount, prim.NumVertices);
-                    Interface.clearsaveprim();
+                    Interface.ReportException(e);
                 }
                 return device.EndScene().Code;
             }

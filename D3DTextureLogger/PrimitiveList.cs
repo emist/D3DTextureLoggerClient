@@ -11,12 +11,24 @@ namespace D3DTextureLogger
         {
             foreach (Primitive primitive in this)
             {
-                if (primitive.PrimCount == prim.PrimCount && primitive.NumVertices == prim.NumVertices)
+                if (primitive.Equals(prim))
                     return true;
             }
             return false;
         }
-
+        
+        public new int IndexOf(Primitive prim)
+        {
+            int i = 0;
+            foreach(Primitive in_prim in this)
+            {
+                if (in_prim.Equals(prim))
+                    return i;
+                i++;
+            }
+            return -1;
+        }
+       
         public Primitive GetSelectedPrimitive()
         {
             foreach (Primitive prim in this)
