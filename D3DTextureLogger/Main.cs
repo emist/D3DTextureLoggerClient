@@ -509,7 +509,6 @@ namespace D3DTextureLogger
                         {
                             string primcount = "", vertcount = "";
                             int selected = prims.IndexOf(prims.GetSelectedPrimitive());
-                            Queue.Push("Selected-EndScene::selected" + selected);
                             if (Interface.keys[0].Equals(Keys.Up))
                             {
                                 if (selected != -1)
