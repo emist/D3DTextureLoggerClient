@@ -21,6 +21,7 @@ namespace D3DTextureLoggerClient
         public bool chamed = false;
         public int TotalPrims = 0;
         public string OutPutDir;
+        public string exe;
 
         public void IsInstalled(Int32 InClientPID)
         {
@@ -143,6 +144,7 @@ namespace D3DTextureLoggerClient
                 try
                 {
                     Console.WriteLine(args[0]);
+                    _interface.exe = args[0].Substring(0, args[0].Length-3);
                     d3d9Util = new D3DHookingLibrary.D3DFuncLookup(args[0], args[1]);
                 }
                 catch (ApplicationException)

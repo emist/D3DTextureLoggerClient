@@ -251,10 +251,13 @@ namespace D3DTextureLogger
                 try
                 {
                     device.GetRenderTargetData(backbuffer, surf);
-                    if (!Directory.Exists(filename + "Output"))
+                    if(!Directory.Exists(filename + "Output"))
                         Directory.CreateDirectory(filename + "Output");
+
+                    if (!Directory.Exists(filename + "Output\\"+ Interface.exe))
+                        Directory.CreateDirectory(filename + "Output\\" + Interface.exe);
                     
-                    Surface.ToFile(surf, filename + "Output\\" + primCount + "x" + numVertices + ".bmp", ImageFileFormat.Bmp);
+                    Surface.ToFile(surf, filename + "Output\\" + Interface.exe + "\\" + primCount + "x" + numVertices + ".bmp", ImageFileFormat.Bmp);
                     surf.Dispose();
                 }
                 catch (Exception e)
