@@ -18,6 +18,7 @@ namespace D3DTextureLoggerClient
         public bool saveprim = false, automatic = false;
         public bool clearprims = false;
         public bool display = true;
+        public bool chamed = false;
         public int TotalPrims = 0;
         public string OutPutDir;
 
@@ -49,6 +50,11 @@ namespace D3DTextureLoggerClient
         public void clearautomatic()
         {
             this.automatic = false;
+        }
+
+        public void Togglecham()
+        {
+            this.chamed = false;
         }
 
         public void Message(Int32 InClientPID, String[] strings)

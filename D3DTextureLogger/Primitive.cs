@@ -9,7 +9,8 @@ namespace D3DTextureLogger
     {
         int primCount, numVertices;
         bool selected = false;
-        bool displayed = true; 
+        bool displayed = true;
+        bool chamed = false;
 
         public Primitive(int primCount, int numVertices)
         {
@@ -66,6 +67,18 @@ namespace D3DTextureLogger
             set
             {
                 selected = value;
+            }
+        }
+
+        public bool Chamed
+        {
+            get
+            {
+                return chamed;
+            }
+            set
+            {
+                chamed = value;
             }
         }
 

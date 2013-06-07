@@ -77,5 +77,10 @@ namespace D3DTextureLoggerClient
             Program._interface.display = false;
         }
 
+        private void AddToChamsButton_Click(object sender, EventArgs e)
+        {
+            Program._interface.chamed = true;
+        }
+
     }
 }

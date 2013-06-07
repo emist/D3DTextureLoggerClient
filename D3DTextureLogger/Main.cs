@@ -65,7 +65,7 @@ namespace D3DTextureLogger
         static SlimDX.Direct3D9.Texture RedTexture = null;
 
         static PrimitiveList prims = new PrimitiveList();
-
+       
         static byte[] red = 
                     {
                         0x42, 0x4D, 0x3A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
@@ -271,10 +271,10 @@ namespace D3DTextureLogger
         {
             using (SlimDX.Direct3D9.Device device = SlimDX.Direct3D9.Device.FromPointer(devicePtr))
             {
+                Primitive prim = new Primitive(primCount, numVertices);
                 int hRet = 0;
                 try
                 {
-                    Primitive prim = new Primitive(primCount, numVertices);
                     //if new primitive being rendered, add it to our list
                     if (!prims.Contains(prim))
                     {
@@ -282,19 +282,32 @@ namespace D3DTextureLogger
                     }
 
                     Primitive selectedPrim = prims.GetSelectedPrimitive();
-                    
+                   
                     if (selectedPrim != null)
                     {
                         if (selectedPrim.Equals(prim))
                         {
+                       
                             if (RedTexture == null)
                                 RedTexture = SlimDX.Direct3D9.Texture.FromMemory(device, red);
 
-                            device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
+                            if (Interface.chamed == true)
+                            {
+                                selectedPrim.Chamed = true;
+                                Interface.Togglecham();
+                            }
+
                             device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
                             device.SetTexture(0, RedTexture);
+
+                            if (selectedPrim.Chamed)
+                                device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
+
+
+                    
                             hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                              numVertices, startIndex, primCount).Code;
+                            device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
                         }
                     }
                     //if not to display, don't render
@@ -309,9 +322,27 @@ namespace D3DTextureLogger
                 }
 
                 if (hRet == 0)
-                    hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
+                {
+                    if (prims[prims.IndexOf(prim)].Chamed == false)
+                    {
+                        hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                             numVertices, startIndex, primCount).Code;
+                    }
+                    else
+                    {
+                        if (RedTexture == null)
+                            RedTexture = SlimDX.Direct3D9.Texture.FromMemory(device, red);
 
+                        device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
+                        device.SetTexture(0, RedTexture);
+                        device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
+                       
+                        
+                        hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
+                                                            numVertices, startIndex, primCount).Code;
+                        device.SetRenderState(RenderState.ZEnable, true);
+                    }
+                }
                 return hRet;
             }
         }

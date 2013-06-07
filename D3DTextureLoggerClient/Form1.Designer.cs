@@ -167,6 +167,7 @@
             this.AddToChamsButton.TabIndex = 13;
             this.AddToChamsButton.Text = "Add to Chams";
             this.AddToChamsButton.UseVisualStyleBackColor = true;
+            this.AddToChamsButton.Click += new System.EventHandler(this.AddToChamsButton_Click);
             // 
             // ToggleDisplay
             // 
