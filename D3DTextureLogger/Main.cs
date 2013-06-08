@@ -65,7 +65,9 @@ namespace D3DTextureLogger
         static SlimDX.Direct3D9.Texture RedTexture = null;
 
         static PrimitiveList prims = new PrimitiveList();
-       
+        static List<StoredDIP> lastDraw = new List<StoredDIP>();
+        
+        
         static byte[] red = 
                     {
                         0x42, 0x4D, 0x3A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
@@ -73,7 +75,7 @@ namespace D3DTextureLogger
                         0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00
                     };
-
+        
         static byte[] orange = 
                     {
                         0x42, 0x4D, 0x3A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
@@ -91,6 +93,8 @@ namespace D3DTextureLogger
         const int STARTINDEX = 3;
         const int LOGVALUES = 4;
         int g_uiStride = 0;
+
+        PixelShader chamPixelShader; 
 
         [DllImport("user32.dll")]
         static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
@@ -300,11 +304,17 @@ namespace D3DTextureLogger
                                 Interface.Togglecham();
                             }
 
+                            
                             device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
                             device.SetTexture(0, RedTexture);
 
                             if (selectedPrim.Chamed)
+                            {
+                                //device.Clear(ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
                                 device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
+                                device.SetRenderState(SlimDX.Direct3D9.RenderState.SourceBlend, false);
+                                device.SetRenderState(SlimDX.Direct3D9.RenderState.AlphaBlendEnable, false);
+                            }
 
 
                     
@@ -333,17 +343,18 @@ namespace D3DTextureLogger
                     }
                     else
                     {
-                        if (RedTexture == null)
-                            RedTexture = SlimDX.Direct3D9.Texture.FromMemory(device, red);
-
-                        device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
-                        device.SetTexture(0, RedTexture);
-                        device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
-                       
+                        PixelShader previous = device.PixelShader;
+                        if(chamPixelShader == null)
+                            chamPixelShader = new PixelShader(device, ShaderBytecode.Compile("float4 PShader(float4 position : SV_POSITION) : SV_Target\n" +
+                                                                    "{\nreturn float4(1.0f, 1.0f, 0.0f, 1.0f);\n}", "PShader", "ps_3_0", ShaderFlags.None));
                         
+                        device.PixelShader = chamPixelShader;
+                        
+                        device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
                         hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                             numVertices, startIndex, primCount).Code;
                         device.SetRenderState(RenderState.ZEnable, true);
+                        device.PixelShader = previous;
                     }
                 }
                 return hRet;
@@ -441,6 +452,15 @@ namespace D3DTextureLogger
             {
                 prims.Clear();
                 Interface.ToggleClearPrims();
+            }
+
+            if (Interface.clearChams)
+            {
+                foreach (Primitive prim in prims)
+                {
+                    prim.Chamed = false;
+                }
+                Interface.ToggleClearChams();
             }
 
             Interface.UpdateTotalPrims(prims.Count);

@@ -22,10 +22,16 @@ namespace D3DTextureLoggerClient
         public int TotalPrims = 0;
         public string OutPutDir;
         public string exe;
+        public bool clearChams = false;
 
         public void IsInstalled(Int32 InClientPID)
         {
             Console.WriteLine("D3DLogger has been installed in target {0}.\r\n", InClientPID);
+        }
+
+        public void ToggleClearChams()
+        {
+            clearChams = false;
         }
 
         public void ToggleClearPrims()

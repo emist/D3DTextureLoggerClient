@@ -187,6 +187,7 @@
             this.ClearChams.TabIndex = 15;
             this.ClearChams.Text = "Clear Chams";
             this.ClearChams.UseVisualStyleBackColor = true;
+            this.ClearChams.Click += new System.EventHandler(this.ClearChams_Click);
             // 
             // Form1
             // 

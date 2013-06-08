@@ -82,5 +82,10 @@ namespace D3DTextureLoggerClient
             Program._interface.chamed = true;
         }
 
+        private void ClearChams_Click(object sender, EventArgs e)
+        {
+            Program._interface.clearChams = true;
+        }
+
     }
 }
