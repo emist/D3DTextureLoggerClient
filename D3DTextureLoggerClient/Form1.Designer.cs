@@ -43,7 +43,6 @@
             this.AddToChamsButton = new System.Windows.Forms.Button();
             this.ToggleDisplay = new System.Windows.Forms.Button();
             this.ClearChams = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -124,11 +123,11 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(132, 12);
+            this.button5.Location = new System.Drawing.Point(132, 15);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(96, 26);
+            this.button5.Size = new System.Drawing.Size(96, 36);
             this.button5.TabIndex = 9;
-            this.button5.Text = "Dump Prim";
+            this.button5.Text = "Automatic";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -190,21 +189,11 @@
             this.ClearChams.UseVisualStyleBackColor = true;
             this.ClearChams.Click += new System.EventHandler(this.ClearChams_Click);
             // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(132, 40);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(96, 23);
-            this.button7.TabIndex = 16;
-            this.button7.Text = "Dump Texture";
-            this.button7.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(256, 299);
-            this.Controls.Add(this.button7);
             this.Controls.Add(this.ClearChams);
             this.Controls.Add(this.ToggleDisplay);
             this.Controls.Add(this.AddToChamsButton);
@@ -244,6 +233,5 @@
         private System.Windows.Forms.Button AddToChamsButton;
         private System.Windows.Forms.Button ToggleDisplay;
         private System.Windows.Forms.Button ClearChams;
-        private System.Windows.Forms.Button button7;
     }
 }
