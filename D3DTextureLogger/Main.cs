@@ -65,7 +65,7 @@ namespace D3DTextureLogger
         static SlimDX.Direct3D9.Texture RedTexture = null;
 
         static PrimitiveList prims = new PrimitiveList();
-        static List<StoredDIP> lastDraw = new List<StoredDIP>();
+        //static List<StoredDIP> lastDraw = new List<StoredDIP>();
         
         
         static byte[] red = 
@@ -292,6 +292,7 @@ namespace D3DTextureLogger
                    
                     if (selectedPrim != null)
                     {
+                        //prim.DumpToObjFile("x", device.Indices, , startIndex, minimumVertexIndex, baseVertexIndex);
                         if (selectedPrim.Equals(prim))
                         {
                        
