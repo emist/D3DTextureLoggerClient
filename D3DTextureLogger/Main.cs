@@ -26,7 +26,7 @@ namespace D3DTextureLogger
     delegate int Direct3D9Device_BeginSceneDelegate(IntPtr device);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-    delegate int Direct3D9Device_SetStreamSourceDelegate(IntPtr device, int stream, SlimDX.Direct3D9.VertexBuffer vBuffer,
+    delegate int Direct3D9Device_SetStreamSourceDelegate(IntPtr device, int stream, IntPtr vBuffer,
                                                          int offsetInBytes, int stride);
 
 
@@ -62,11 +62,12 @@ namespace D3DTextureLogger
         static SlimDX.Direct3D9.Line MenuLine = null;
          */
 
+        VertexBuffer vb = null;
         static SlimDX.Direct3D9.Texture RedTexture = null;
 
         static PrimitiveList prims = new PrimitiveList();
         static List<StoredDIP> lastDraw = new List<StoredDIP>();
-        
+        Dictionary<int, int> vmap = new Dictionary<int, int>();
         
         static byte[] red = 
                     {
@@ -87,19 +88,18 @@ namespace D3DTextureLogger
 
 
 
-        const int STRIDE = 0;
+        //const int STRIDE = 0;
         const int NUMVERTS = 1;
         const int PRIMCOUNT = 2;
         const int STARTINDEX = 3;
         const int LOGVALUES = 4;
         int g_uiStride = 0;
+        List<vertex> vertices = new List<vertex>();
 
         PixelShader chamPixelShader; 
 
         [DllImport("user32.dll")]
         static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
-
-
 
         struct ModelRecLogger_t
         {
@@ -119,6 +119,10 @@ namespace D3DTextureLogger
 
         static int menuIndex = 0;
         static int incrementBy = 1;
+        public struct vertex
+        {
+            public float x, y, z;
+        };
 
 
         D3DLoggerInterface Interface;
@@ -193,13 +197,13 @@ namespace D3DTextureLogger
                 DrawIndexedPrimitivesLocalHook = LocalHook.Create(DrawIndexedPrimitivesAddress, new Direct3D9_DrawIndexedPrimitives(DrawIndexedPrimitivesHook), this);
 
                 SetStreamSourceLocalHook = LocalHook.Create(SetStreamSourceAddress, new Direct3D9Device_SetStreamSourceDelegate(SetStreamSourceHook), this);
-                //SetStreamSourceLocalHook.ThreadACL.SetExclusiveACL(new Int32[1]);
+                SetStreamSourceLocalHook.ThreadACL.SetExclusiveACL(new Int32[1]);
 
                 //BeginSceneLocalHook = LocalHook.Create(BeginSceneAddress, new Direct3D9Device_BeginSceneDelegate(BeginSceneHook), this);
                 //BeginSceneLocalHook.ThreadACL.SetExclusiveACL(new Int32[1]);
 
 
-
+                vertices.Add(new vertex());
                 DrawIndexedPrimitivesLocalHook.ThreadACL.SetExclusiveACL(new Int32[1]);
                 EndSceneLocalHook.ThreadACL.SetExclusiveACL(new Int32[1]);
                 //ResetLocalHook.ThreadACL.SetExclusiveACL(new Int32[1]);
@@ -271,6 +275,134 @@ namespace D3DTextureLogger
             }
         }
 
+        public vertex GetVertex(UInt16 index, ref BinaryReader VertexData)
+        {
+            vertex v = new vertex();
+            if (VertexData != null)
+            {
+                if (VertexData.BaseStream == null)
+                {
+                    Queue.Push("VertexData is NULL (GetVertex)");
+                    return v;
+                }
+                VertexData.BaseStream.Seek(index * stride, SeekOrigin.Begin);
+                Queue.Push("Stride = ");
+                Queue.Push(stride.ToString());
+                v.x = VertexData.ReadSingle();
+                v.y = VertexData.ReadSingle();
+                v.z = VertexData.ReadSingle();
+            }
+            return v;
+        }
+
+        public bool VertContains(vertex v)
+        {
+            foreach (vertex vert in this.vertices)
+            {
+                if (vert.x == v.x)
+                    if (vert.y == v.y)
+                        if (vert.z == v.z)
+                            return true;
+            }
+            return false;
+        }
+
+        bool VertexEquals(vertex a, vertex b)
+        {
+            if (a.x == b.x)
+                if (a.y == b.y)
+                    if (a.z == b.z)
+                        return true;
+            return false;
+        }
+
+        int GetIndex(vertex v)
+        {
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (VertexEquals(vertices[i], v))
+                    return i;
+            }
+            return -1;
+        }
+
+        public void RipTriangleList(int baseVertexIndex, int startIndex, int primCount, ref IndexBuffer ib)
+        {
+            
+            if (ib == null)
+            {
+                Queue.Push("IB IS NULL");
+                return;
+            }
+
+            if (vb == null)
+            {
+                Queue.Push("VB IS NULL");
+                return;
+            }
+
+            BinaryReader IndexData = new BinaryReader(ib.Lock(0,0, LockFlags.ReadOnly));
+            BinaryReader VertexData = new BinaryReader(vb.Lock(0, 0, LockFlags.ReadOnly));
+            vertex v;
+
+            if (IndexData == null)
+            {
+                Queue.Push("Index Data is Null");
+                return;
+            }
+
+            if (VertexData == null)
+            {
+                Queue.Push("VertexData is NULL");
+                return;
+            }
+            
+            IndexData.BaseStream.Seek(startIndex, SeekOrigin.Begin);
+            int f = 0;
+            string verts = "";
+            for (int i = 0; i < primCount * 3; i++)
+            {
+                
+                UInt16 index = IndexData.ReadUInt16();
+                UInt16 bVertex = (UInt16)baseVertexIndex;
+                v = GetVertex(index, ref VertexData);
+                if (!VertContains(v))
+                {
+                    vertices.Add(v);
+                    verts += "v " + v.x + " " + v.y + " " + v.z + "\r\n";
+                }
+                vmap[index + bVertex] = GetIndex(v);   
+            }
+
+            System.IO.File.WriteAllText("C:\\Users\\emist\\models.txt", verts);
+
+            IndexData.BaseStream.Seek(startIndex, SeekOrigin.Begin);
+            string faces = "";
+            for(int i = 0; i < primCount*3; i++)
+            {
+                UInt16 index = IndexData.ReadUInt16();
+                UInt16 bVertex = (UInt16)baseVertexIndex;
+                if(f % 3 == 0)
+                {
+                    faces += "\r\nf ";
+                }
+
+                faces+=vmap[index+bVertex] + " ";
+                f++;
+            }
+            System.IO.File.AppendAllText("C:\\Users\\emist\\models.txt", faces);
+            vb.Unlock();
+            ib.Unlock(); 
+            
+        }
+
+        public void RipModel(SlimDX.Direct3D9.Device device, SlimDX.Direct3D9.PrimitiveType primitiveType,
+                                        int baseVertexIndex, int startIndex, int primCount)
+        {
+            IndexBuffer ib = device.Indices;
+            if (primitiveType == PrimitiveType.TriangleList)
+                RipTriangleList(baseVertexIndex, startIndex, primCount, ref ib);
+        }
 
         int DrawIndexedPrimitivesHook(IntPtr devicePtr, SlimDX.Direct3D9.PrimitiveType primitiveType,
                                         int baseVertexIndex, int minimumVertexIndex,
@@ -303,21 +435,23 @@ namespace D3DTextureLogger
                                 selectedPrim.Chamed = true;
                                 Interface.Togglecham();
                             }
-
                             
                             device.SetRenderState(SlimDX.Direct3D9.RenderState.FillMode, SlimDX.Direct3D9.FillMode.Solid);
                             device.SetTexture(0, RedTexture);
+
 
                             if (selectedPrim.Chamed)
                             {
                                 //device.Clear(ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
                                 device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
-                                device.SetRenderState(SlimDX.Direct3D9.RenderState.SourceBlend, false);
-                                device.SetRenderState(SlimDX.Direct3D9.RenderState.AlphaBlendEnable, false);
                             }
 
+                            if (Interface.rip)
+                            {
+                                RipModel(device, primitiveType, baseVertexIndex, startIndex, primCount);
+                                Interface.ToggleRip();
+                            }
 
-                    
                             hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                              numVertices, startIndex, primCount).Code;
                             device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
@@ -361,21 +495,24 @@ namespace D3DTextureLogger
             }
         }
 
-        int SetStreamSourceHook(IntPtr devicePtr, int stream, SlimDX.Direct3D9.VertexBuffer vBuffer,
+        int SetStreamSourceHook(IntPtr devicePtr, int stream, IntPtr vBuffer,
                                 int offsetInBytes, int Stride)
         {
             using (SlimDX.Direct3D9.Device device = SlimDX.Direct3D9.Device.FromPointer(devicePtr))
             {
                 try
                 {
-                    stride = Stride;
-                    return device.SetStreamSource(stream, vBuffer, offsetInBytes, Stride).Code;
+                    if (stream == 0)
+                    {
+                        stride = Stride;
+                        vb = VertexBuffer.FromPointer(vBuffer);
+                    }
                 }
                 catch (Exception e)
                 {
                     Interface.ReportException(e);
-                    return device.SetStreamSource(stream, vBuffer, offsetInBytes, Stride).Code;
                 }
+                return device.SetStreamSource(stream, VertexBuffer.FromPointer(vBuffer), offsetInBytes, Stride).Code;
             }
         }
 

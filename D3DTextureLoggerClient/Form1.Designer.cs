@@ -127,7 +127,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(96, 36);
             this.button5.TabIndex = 9;
-            this.button5.Text = "Automatic";
+            this.button5.Text = "Rip Model";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -171,7 +171,7 @@
             // 
             // ToggleDisplay
             // 
-            this.ToggleDisplay.Location = new System.Drawing.Point(73, 153);
+            this.ToggleDisplay.Location = new System.Drawing.Point(79, 153);
             this.ToggleDisplay.Name = "ToggleDisplay";
             this.ToggleDisplay.Size = new System.Drawing.Size(96, 24);
             this.ToggleDisplay.TabIndex = 14;

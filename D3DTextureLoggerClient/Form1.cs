@@ -55,7 +55,7 @@ namespace D3DTextureLoggerClient
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Program._interface.automatic = true;
+            Program._interface.rip = true;
         }
 
         private void button2_Click_1(object sender, EventArgs e)

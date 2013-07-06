@@ -19,6 +19,7 @@ namespace D3DTextureLoggerClient
         public bool clearprims = false;
         public bool display = true;
         public bool chamed = false;
+        public bool rip = false;
         public int TotalPrims = 0;
         public string OutPutDir;
         public string exe;
@@ -32,6 +33,11 @@ namespace D3DTextureLoggerClient
         public void ToggleClearChams()
         {
             clearChams = false;
+        }
+
+        public void ToggleRip()
+        {
+            rip = false;
         }
 
         public void ToggleClearPrims()
