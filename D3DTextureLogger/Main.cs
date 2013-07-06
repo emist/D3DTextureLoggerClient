@@ -286,8 +286,8 @@ namespace D3DTextureLogger
                     return v;
                 }
                 VertexData.BaseStream.Seek(index * stride, SeekOrigin.Begin);
-                Queue.Push("Stride = ");
-                Queue.Push(stride.ToString());
+                //Queue.Push("Stride = ");
+                //Queue.Push(stride.ToString());
                 v.x = VertexData.ReadSingle();
                 v.y = VertexData.ReadSingle();
                 v.z = VertexData.ReadSingle();
@@ -326,9 +326,89 @@ namespace D3DTextureLogger
             return -1;
         }
 
+        public void RipTriangleStrip(int baseVertexIndex, int startIndex, int primCount, ref IndexBuffer ib)
+        {
+
+            Queue.Push("Strip");
+            if (ib == null)
+            {
+                Queue.Push("IB IS NULL");
+                return;
+            }
+
+            if (vb == null)
+            {
+                Queue.Push("VB IS NULL");
+                return;
+            }
+
+            BinaryReader IndexData = new BinaryReader(ib.Lock(0, 0, LockFlags.ReadOnly));
+            BinaryReader VertexData = new BinaryReader(vb.Lock(0, 0, LockFlags.ReadOnly));
+            vertex v;
+
+            if (IndexData == null)
+            {
+                Queue.Push("Index Data is Null");
+                return;
+            }
+
+            if (VertexData == null)
+            {
+                Queue.Push("VertexData is NULL");
+                return;
+            }
+
+            IndexData.BaseStream.Seek(startIndex*sizeof(UInt16), SeekOrigin.Begin);
+            int f = 0;
+            string verts = "";
+            for (int i = 0; i < primCount; i++)
+            {
+
+                UInt16 index = IndexData.ReadUInt16();
+                UInt16 bVertex = (UInt16)baseVertexIndex;
+                v = GetVertex((UInt16)(index+bVertex), ref VertexData);
+                if (!VertContains(v))
+                {
+                    vertices.Add(v);
+                    verts += "v " + v.x + " " + v.y + " " + v.z + "\r\n";
+                }
+                vmap[index + bVertex] = GetIndex(v);
+            }
+
+            System.IO.File.WriteAllText("C:\\Users\\emist\\models.txt", verts);
+
+            IndexData.BaseStream.Seek(startIndex*sizeof(UInt16), SeekOrigin.Begin);
+            string faces = "";
+            
+            //build initial face
+            //faces += "f " + vmap[IndexData.ReadUInt16() + (UInt16)baseVertexIndex] + " " + vmap[IndexData.ReadUInt16() + (UInt16)baseVertexIndex] +
+            //" " + vmap[IndexData.ReadUInt16() + (UInt16)baseVertexIndex] + "\r\n";
+            
+            //IndexData.BaseStream.Seek(startIndex+1, SeekOrigin.Begin);
+
+            for (int i = 0; i < primCount; i++)
+            {
+                IndexData.BaseStream.Seek((startIndex + i)*sizeof(UInt16), SeekOrigin.Begin);
+                UInt16 bVertex = (UInt16)baseVertexIndex;
+               
+                UInt16 I = IndexData.ReadUInt16();
+                UInt16 I1 = IndexData.ReadUInt16();
+                UInt16 I2 = IndexData.ReadUInt16();
+                faces+="f " + vmap[I+bVertex] + " " + vmap[I1 + bVertex] + " " 
+                            + vmap[I2 + bVertex] + "\r\n";
+                f++;
+            }
+            System.IO.File.AppendAllText("C:\\Users\\emist\\models.txt", faces);
+            vb.Unlock();
+            ib.Unlock();
+            vertices.Clear();
+            vertices.Add(new vertex());
+            vmap.Clear();
+        }
+
         public void RipTriangleList(int baseVertexIndex, int startIndex, int primCount, ref IndexBuffer ib)
         {
-            
+            Queue.Push("List");
             if (ib == null)
             {
                 Queue.Push("IB IS NULL");
@@ -357,7 +437,7 @@ namespace D3DTextureLogger
                 return;
             }
             
-            IndexData.BaseStream.Seek(startIndex, SeekOrigin.Begin);
+            IndexData.BaseStream.Seek(startIndex * sizeof(UInt16), SeekOrigin.Begin);
             int f = 0;
             string verts = "";
             for (int i = 0; i < primCount * 3; i++)
@@ -376,7 +456,7 @@ namespace D3DTextureLogger
 
             System.IO.File.WriteAllText("C:\\Users\\emist\\models.txt", verts);
 
-            IndexData.BaseStream.Seek(startIndex, SeekOrigin.Begin);
+            IndexData.BaseStream.Seek(startIndex*sizeof(UInt16), SeekOrigin.Begin);
             string faces = "";
             for(int i = 0; i < primCount*3; i++)
             {
@@ -392,8 +472,10 @@ namespace D3DTextureLogger
             }
             System.IO.File.AppendAllText("C:\\Users\\emist\\models.txt", faces);
             vb.Unlock();
-            ib.Unlock(); 
-            
+            ib.Unlock();
+            vertices.Clear();
+            vertices.Add(new vertex());
+            vmap.Clear();            
         }
 
         public void RipModel(SlimDX.Direct3D9.Device device, SlimDX.Direct3D9.PrimitiveType primitiveType,
@@ -402,6 +484,8 @@ namespace D3DTextureLogger
             IndexBuffer ib = device.Indices;
             if (primitiveType == PrimitiveType.TriangleList)
                 RipTriangleList(baseVertexIndex, startIndex, primCount, ref ib);
+            if (primitiveType == PrimitiveType.TriangleStrip)
+                RipTriangleStrip(baseVertexIndex, startIndex, primCount, ref ib);
         }
 
         int DrawIndexedPrimitivesHook(IntPtr devicePtr, SlimDX.Direct3D9.PrimitiveType primitiveType,
