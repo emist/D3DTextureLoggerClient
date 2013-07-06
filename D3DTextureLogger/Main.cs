@@ -89,6 +89,7 @@ namespace D3DTextureLogger
 
 
         //const int STRIDE = 0;
+        int mod_count = 0;
         const int NUMVERTS = 1;
         const int PRIMCOUNT = 2;
         const int STARTINDEX = 3;
@@ -375,7 +376,15 @@ namespace D3DTextureLogger
                 vmap[index + bVertex] = GetIndex(v);
             }
 
-            System.IO.File.WriteAllText("C:\\Users\\emist\\models.txt", verts);
+
+            if (!Directory.Exists(Interface.OutPutDir + "Output"))
+                Directory.CreateDirectory(Interface.OutPutDir + "Output");
+
+            if (!Directory.Exists(Interface.OutPutDir + "Output\\" + Interface.exe))
+                Directory.CreateDirectory(Interface.OutPutDir + "Output\\" + Interface.exe);
+
+
+            System.IO.File.WriteAllText(Interface.OutPutDir + "Output\\" + Interface.exe + "\\model" + mod_count + ".obj", verts);
 
             IndexData.BaseStream.Seek(startIndex*sizeof(UInt16), SeekOrigin.Begin);
             string faces = "";
@@ -398,7 +407,8 @@ namespace D3DTextureLogger
                             + vmap[I2 + bVertex] + "\r\n";
                 f++;
             }
-            System.IO.File.AppendAllText("C:\\Users\\emist\\models.txt", faces);
+            System.IO.File.AppendAllText(Interface.OutPutDir + "Output\\" + Interface.exe + "\\model" + mod_count + ".obj", faces);
+            mod_count++;
             vb.Unlock();
             ib.Unlock();
             vertices.Clear();
@@ -454,7 +464,14 @@ namespace D3DTextureLogger
                 vmap[index + bVertex] = GetIndex(v);   
             }
 
-            System.IO.File.WriteAllText("C:\\Users\\emist\\models.txt", verts);
+            if (!Directory.Exists(Interface.OutPutDir + "Output"))
+                Directory.CreateDirectory(Interface.OutPutDir + "Output");
+
+            if (!Directory.Exists(Interface.OutPutDir + "Output\\" + Interface.exe))
+                Directory.CreateDirectory(Interface.OutPutDir + "Output\\" + Interface.exe);
+
+
+            System.IO.File.WriteAllText(Interface.OutPutDir + "Output\\" + Interface.exe + "\\model" + mod_count + ".obj", verts);
 
             IndexData.BaseStream.Seek(startIndex*sizeof(UInt16), SeekOrigin.Begin);
             string faces = "";
@@ -470,7 +487,9 @@ namespace D3DTextureLogger
                 faces+=vmap[index+bVertex] + " ";
                 f++;
             }
-            System.IO.File.AppendAllText("C:\\Users\\emist\\models.txt", faces);
+
+            System.IO.File.AppendAllText(Interface.OutPutDir + "Output\\" + Interface.exe + "\\model" + mod_count + ".obj", faces);
+            mod_count++;
             vb.Unlock();
             ib.Unlock();
             vertices.Clear();
@@ -688,79 +707,6 @@ namespace D3DTextureLogger
 
             using (Device device = SlimDX.Direct3D9.Device.FromPointer(devicePtr))
             {
-                /*
-                    try
-                    {
-
-                        byte[] red = 
-                    {
-                        0x42, 0x4D, 0x3A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
-                        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
-                        0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00
-                    };
-
-                        byte[] orange = 
-                    {
-                        0x42, 0x4D, 0x3A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00,
-                        0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x18, 0x00, 0x00, 0x00,
-                        0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA5, 0xFF, 0x00
-                    };
-
-                        //Main This = (Main)HookRuntimeInfo.Callback;
-
-                        SlimDX.Color4 MenuLineColor;
-                        SlimDX.Color4 FontColor;
-                        SlimDX.Direct3D9.Texture RedTexture = null;
-                        SlimDX.Direct3D9.Texture OrangeTexture = null;
-                        SlimDX.Direct3D9.Font MenuFont = null;
-                        SlimDX.Direct3D9.Line MenuLine = null;
-
-
-                        MenuLineColor = new SlimDX.Color4(Color.Red);
-                        FontColor = new SlimDX.Color4(Color.Purple);
-
-
-                        RedTexture = SlimDX.Direct3D9.Texture.FromMemory(device, red);
-                        OrangeTexture = SlimDX.Direct3D9.Texture.FromMemory(device, orange);
-
-                        
-                        MenuFont = new SlimDX.Direct3D9.Font(device, 15, 0, SlimDX.Direct3D9.FontWeight.Bold, 1, false,
-                                                                 SlimDX.Direct3D9.CharacterSet.Default, SlimDX.Direct3D9.Precision.Default,
-                                                                 SlimDX.Direct3D9.FontQuality.Antialiased,
-                                                                 SlimDX.Direct3D9.PitchAndFamily.DontCare,
-                                                                 "Verdana");
-
-                        MenuLine = new SlimDX.Direct3D9.Line(device);
-
-
-                        if (MenuFont != null && MenuLine != null && FontColor != null)
-                        {
-                            Rectangle fontPos = new Rectangle();
-                            fontPos.X = 10;
-                            fontPos.Y = 10;
-                            fontPos.Width = 10 + 120;
-                            fontPos.Height = 15 + 16;
-
-                            string text = "Helllo world";
-
-                            if (MenuFont != null)
-                            {
-                                MenuFont.DrawString(null, text, fontPos, SlimDX.Direct3D9.DrawTextFormat.NoClip, FontColor);
-                            }
-                            //ModelRecLoggerMenu(FontColor, MenuFont, MenuLine, MenuLineColor);
-                            
-                          
-                        }
-                        
-                    }
-                    catch (Exception e)
-                    {
-                        Interface.ReportException(e);
-                        return device.EndScene().Code;
-                    }
-                    */
                 
                 if (Interface.display == false)
                 {
