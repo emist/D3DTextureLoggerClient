@@ -24,6 +24,12 @@ namespace D3DTextureLoggerClient
         public string OutPutDir;
         public string exe;
         public bool clearChams = false;
+        public bool CaptureFrame = false;
+
+        public void ToggleCaptureFrame()
+        {
+            CaptureFrame = false;
+        }
 
         public void IsInstalled(Int32 InClientPID)
         {

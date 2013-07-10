@@ -364,7 +364,6 @@ namespace D3DTextureLogger
             string verts = "";
             for (int i = 0; i < primCount; i++)
             {
-
                 UInt16 index = IndexData.ReadUInt16();
                 UInt16 bVertex = (UInt16)baseVertexIndex;
                 v = GetVertex((UInt16)(index+bVertex), ref VertexData);
@@ -455,7 +454,7 @@ namespace D3DTextureLogger
                 
                 UInt16 index = IndexData.ReadUInt16();
                 UInt16 bVertex = (UInt16)baseVertexIndex;
-                v = GetVertex(index, ref VertexData);
+                v = GetVertex((UInt16)(index + bVertex), ref VertexData);
                 if (!VertContains(v))
                 {
                     vertices.Add(v);
@@ -494,7 +493,7 @@ namespace D3DTextureLogger
             ib.Unlock();
             vertices.Clear();
             vertices.Add(new vertex());
-            vmap.Clear();            
+            vmap.Clear();
         }
 
         public void RipModel(SlimDX.Direct3D9.Device device, SlimDX.Direct3D9.PrimitiveType primitiveType,
@@ -517,6 +516,9 @@ namespace D3DTextureLogger
                 int hRet = 0;
                 try
                 {
+                    if(Interface.CaptureFrame)
+                        RipModel(device, primitiveType, baseVertexIndex, startIndex, primCount);
+
                     //if new primitive being rendered, add it to our list
                     if (!prims.Contains(prim))
                     {
@@ -547,17 +549,23 @@ namespace D3DTextureLogger
                             {
                                 //device.Clear(ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
                                 device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
+                                hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
+                                                             numVertices, startIndex, primCount).Code;
+                                device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
                             }
 
+                            
                             if (Interface.rip)
                             {
-                                RipModel(device, primitiveType, baseVertexIndex, startIndex, primCount);
-                                Interface.ToggleRip();
+                                if (!Interface.CaptureFrame)
+                                {
+                                    RipModel(device, primitiveType, baseVertexIndex, startIndex, primCount);
+                                    Interface.ToggleRip();
+                                }
                             }
 
                             hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                              numVertices, startIndex, primCount).Code;
-                            device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, true);
                         }
                     }
                     //if not to display, don't render
@@ -587,10 +595,14 @@ namespace D3DTextureLogger
                         
                         device.PixelShader = chamPixelShader;
                         
+                        hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
+                                    numVertices, startIndex, primCount).Code;
+  
                         device.SetRenderState(SlimDX.Direct3D9.RenderState.ZEnable, false);
                         hRet = device.DrawIndexedPrimitives(primitiveType, baseVertexIndex, minimumVertexIndex,
                                                             numVertices, startIndex, primCount).Code;
                         device.SetRenderState(RenderState.ZEnable, true);
+                      
                         device.PixelShader = previous;
                     }
                 }
@@ -688,6 +700,9 @@ namespace D3DTextureLogger
 
         int EndSceneHook(IntPtr devicePtr)
         {
+            if (Interface.CaptureFrame)
+                Interface.ToggleCaptureFrame();
+
             if (Interface.clearprims)
             {
                 prims.Clear();

@@ -43,6 +43,7 @@
             this.AddToChamsButton = new System.Windows.Forms.Button();
             this.ToggleDisplay = new System.Windows.Forms.Button();
             this.ClearChams = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -171,7 +172,7 @@
             // 
             // ToggleDisplay
             // 
-            this.ToggleDisplay.Location = new System.Drawing.Point(79, 153);
+            this.ToggleDisplay.Location = new System.Drawing.Point(29, 153);
             this.ToggleDisplay.Name = "ToggleDisplay";
             this.ToggleDisplay.Size = new System.Drawing.Size(96, 24);
             this.ToggleDisplay.TabIndex = 14;
@@ -189,11 +190,22 @@
             this.ClearChams.UseVisualStyleBackColor = true;
             this.ClearChams.Click += new System.EventHandler(this.ClearChams_Click);
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(132, 153);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(96, 23);
+            this.button7.TabIndex = 16;
+            this.button7.Text = "Rip Scene";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(256, 299);
+            this.Controls.Add(this.button7);
             this.Controls.Add(this.ClearChams);
             this.Controls.Add(this.ToggleDisplay);
             this.Controls.Add(this.AddToChamsButton);
@@ -233,5 +245,6 @@
         private System.Windows.Forms.Button AddToChamsButton;
         private System.Windows.Forms.Button ToggleDisplay;
         private System.Windows.Forms.Button ClearChams;
+        private System.Windows.Forms.Button button7;
     }
 }

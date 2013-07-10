@@ -87,5 +87,10 @@ namespace D3DTextureLoggerClient
             Program._interface.clearChams = true;
         }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
+            Program._interface.CaptureFrame = true;
+        }
+
     }
 }
