@@ -29,3 +29,9 @@ Load the solution into visual studio and press F6
 <h2>Documentation</h2>
 
 [Docs](http://eryanbot.com/jtp/2013/06/02/d3dtextureloggerclient/)
+
+<h2>Troubleshooting</h2>
+
+If when you run the program you do not get a message on the command prompt telling you where EndScene, SetStreamSource, DrawIndexedPrimitives, BeginScene, and Reset are in memory then you have a problem with the debug server/symbols.  Make sure that dbghelp.dll, symsrv.dll and srcrv.dll are in your path.  If all else fails, dropping them inside the same directory as your D3DTextureLoggerClient shouldwork. 
+
+If you get errors when you click "Inject" then something is wrong with your Easyhook libs.  Make sure that you have EasyHook.dll, EasyHook32.dll, EasyHook64.dll, EasyHookSvc, EasyHook32Svc, and EasyHook64Svc in your path.  If all else fails, dropping them into your executable folder will do the trick. 
