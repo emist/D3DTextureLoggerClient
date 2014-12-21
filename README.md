@@ -22,6 +22,8 @@ Keep your source up to date with:
 
 [Windows Debug Help Library](http://msdn.microsoft.com/en-us/library/windows/desktop/ms679309.aspx)
 
+[Boost] (http://www.boost.org/)
+
 <h2>Compiling</h2>
 
 Load the solution into visual studio and press F6
